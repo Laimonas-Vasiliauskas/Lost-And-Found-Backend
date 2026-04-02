@@ -1,11 +1,9 @@
-﻿using Azure.Core;
-using LostAndFoundApi.Data;
+﻿using LostAndFoundApi.Data;
 using LostAndFoundBack.Dtos;
 using LostAndFoundBack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace LostAndFoundBack.Controllers
 {
@@ -19,6 +17,7 @@ namespace LostAndFoundBack.Controllers
         {
             _context = context;
         }
+
         [Authorize]
         [HttpGet("my")]
         public IActionResult GetMyAds()
@@ -35,10 +34,25 @@ namespace LostAndFoundBack.Controllers
             var ads = _context.Ads
                 .Where(a => a.UserID == userId)
                 .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new
+                {
+                    adID = a.AdID,
+                    userID = a.UserID,
+                    title = a.Title,
+                    description = a.Description,
+                    location = a.Location,
+                    type = a.Type,
+                    createdAt = a.CreatedAt,
+                    images = _context.AdImages
+                        .Where(i => i.AdID == a.AdID)
+                        .Select(i => i.ImageUrl)
+                        .ToList()
+                })
                 .ToList();
 
             return Ok(ads);
         }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAd([FromBody] CreateAdDto dto)
@@ -63,16 +77,16 @@ namespace LostAndFoundBack.Controllers
                 CreatedAt = DateTime.UtcNow
             };
 
-
             _context.Ads.Add(ad);
             await _context.SaveChangesAsync();
 
             return Ok(new
             {
                 message = "Skelbimas sukurtas sėkmingai",
-                ad.AdID
+                adID = ad.AdID
             });
         }
+
         [Authorize]
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
@@ -120,6 +134,7 @@ namespace LostAndFoundBack.Controllers
 
             return Ok(new { imageUrl });
         }
+
         [HttpGet("{id}")]
         public IActionResult GetAdById(int id)
         {
@@ -128,6 +143,7 @@ namespace LostAndFoundBack.Controllers
                 .Select(a => new
                 {
                     adID = a.AdID,
+                    userID = a.UserID,
                     title = a.Title,
                     description = a.Description,
                     location = a.Location,
@@ -147,28 +163,16 @@ namespace LostAndFoundBack.Controllers
 
             return Ok(ad);
         }
+
         [HttpGet]
         public IActionResult GetAllAds()
         {
             var ads = _context.Ads
-                .Select(a => new
-                {
-                    a.AdID,
-                    a.Title,
-                    a.Description,
-                    a.Location,
-                    a.Type,
-                    a.CreatedAt,
-                    Images = _context.AdImages
-                        .Where(img => img.AdID == a.AdID)
-                        .Select(img => img.ImageUrl)
-                        .ToList()
-                })
-                .OrderByDescending(a => a.CreatedAt)
                 .OrderByDescending(a => a.CreatedAt)
                 .Select(a => new
                 {
                     adID = a.AdID,
+                    userID = a.UserID,
                     title = a.Title,
                     description = a.Description,
                     location = a.Location,
@@ -184,5 +188,4 @@ namespace LostAndFoundBack.Controllers
             return Ok(ads);
         }
     }
-
 }

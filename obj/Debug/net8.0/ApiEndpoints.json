@@ -27,6 +27,22 @@
   },
   {
     "ContainingType": "LostAndFoundBack.Controllers.AdsController",
+    "Method": "GetAdById",
+    "RelativePath": "api/Ads/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LostAndFoundBack.Controllers.AdsController",
     "Method": "GetMyAds",
     "RelativePath": "api/Ads/my",
     "HttpMethod": "GET",

@@ -150,3 +150,5 @@ C:\Users\zabel\source\repos\Lost-And-Found-Backend\obj\Debug\net8.0\LostAndFound
 C:\Users\zabel\source\repos\Lost-And-Found-Backend\obj\Debug\net8.0\LostAndFoundBack.genruntimeconfig.cache
 C:\Users\zabel\source\repos\Lost-And-Found-Backend\obj\Debug\net8.0\ref\LostAndFoundBack.dll
 C:\Users\zabel\source\repos\Lost-And-Found-Backend\bin\Debug\net8.0\LostAndFoundBack.staticwebassets.runtime.json
+C:\Users\Laimonas\Desktop\LostAndFoundBack\bin\Debug\net8.0\LostAndFoundBack.staticwebassets.runtime.json
+C:\Users\Laimonas\Desktop\LostAndFoundBack\obj\Debug\net8.0\LostAndFoundBack.sourcelink.json
