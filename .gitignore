@@ -1,3 +1,1 @@
-.vs/
-bin/
-obj/
+.vs/echo bin/echo obj/
