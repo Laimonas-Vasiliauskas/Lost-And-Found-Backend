@@ -10,6 +10,7 @@ namespace LostAndFoundApi.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Ad> Ads { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
