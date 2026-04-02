@@ -3,6 +3,7 @@ using LostAndFoundBack.Dtos;
 using LostAndFoundBack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace LostAndFoundBack.Controllers
@@ -184,6 +185,32 @@ namespace LostAndFoundBack.Controllers
                         .ToList()
                 })
                 .ToList();
+
+            return Ok(ads);
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<IActionResult> GetByCategoryId(int categoryId)
+        {
+            var ads = await _context.Ads
+                .Where(a => a.CategoryID == categoryId)
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new
+                {
+                    adID = a.AdID,
+                    userID = a.UserID,
+                    title = a.Title,
+                    description = a.Description,
+                    location = a.Location,
+                    type = a.Type,
+                    createdAt = a.CreatedAt,
+                    images = _context.AdImages
+                        .Where(i => i.AdID == a.AdID)
+                        .Select(i => i.ImageUrl)
+                        .ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
             return Ok(ads);
         }
