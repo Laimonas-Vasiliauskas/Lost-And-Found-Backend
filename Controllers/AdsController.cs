@@ -120,6 +120,33 @@ namespace LostAndFoundBack.Controllers
 
             return Ok(new { imageUrl });
         }
+        [HttpGet("{id}")]
+        public IActionResult GetAdById(int id)
+        {
+            var ad = _context.Ads
+                .Where(a => a.AdID == id)
+                .Select(a => new
+                {
+                    adID = a.AdID,
+                    title = a.Title,
+                    description = a.Description,
+                    location = a.Location,
+                    type = a.Type,
+                    createdAt = a.CreatedAt,
+                    images = _context.AdImages
+                        .Where(i => i.AdID == a.AdID)
+                        .Select(i => i.ImageUrl)
+                        .ToList()
+                })
+                .FirstOrDefault();
+
+            if (ad == null)
+            {
+                return NotFound(new { message = "Skelbimas nerastas" });
+            }
+
+            return Ok(ad);
+        }
         [HttpGet]
         public IActionResult GetAllAds()
         {
@@ -138,6 +165,20 @@ namespace LostAndFoundBack.Controllers
                         .ToList()
                 })
                 .OrderByDescending(a => a.CreatedAt)
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new
+                {
+                    adID = a.AdID,
+                    title = a.Title,
+                    description = a.Description,
+                    location = a.Location,
+                    type = a.Type,
+                    createdAt = a.CreatedAt,
+                    images = _context.AdImages
+                        .Where(i => i.AdID == a.AdID)
+                        .Select(i => i.ImageUrl)
+                        .ToList()
+                })
                 .ToList();
 
             return Ok(ads);
