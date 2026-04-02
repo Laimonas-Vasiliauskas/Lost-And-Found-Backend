@@ -8,10 +8,11 @@ namespace LostAndFoundApi.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Ad> Ads { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<AdImage> AdImages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
