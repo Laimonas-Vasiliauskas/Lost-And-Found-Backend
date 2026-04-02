@@ -11,6 +11,7 @@ namespace LostAndFoundApi.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Ad> Ads { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,9 @@ namespace LostAndFoundApi.Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            modelBuilder.Entity<Category>().ToTable("Categories");
+            modelBuilder.Entity<Category>().HasKey(c => c.CategoryID);
         }
     }
 }
