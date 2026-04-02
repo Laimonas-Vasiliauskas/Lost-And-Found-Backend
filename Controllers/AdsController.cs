@@ -120,5 +120,28 @@ namespace LostAndFoundBack.Controllers
 
             return Ok(new { imageUrl });
         }
+        [HttpGet]
+        public IActionResult GetAllAds()
+        {
+            var ads = _context.Ads
+                .Select(a => new
+                {
+                    a.AdID,
+                    a.Title,
+                    a.Description,
+                    a.Location,
+                    a.Type,
+                    a.CreatedAt,
+                    Images = _context.AdImages
+                        .Where(img => img.AdID == a.AdID)
+                        .Select(img => img.ImageUrl)
+                        .ToList()
+                })
+                .OrderByDescending(a => a.CreatedAt)
+                .ToList();
+
+            return Ok(ads);
+        }
     }
+
 }
