@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using LostAndFoundApi.Data;
+using LostAndFoundBack.Dtos;
 using LostAndFoundBack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -74,8 +75,12 @@ namespace LostAndFoundBack.Controllers
         }
         [Authorize]
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] int adId)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadImage([FromForm] UploadImageDto dto)
         {
+            var file = dto.File;
+            var adId = dto.AdId;
+
             if (file == null || file.Length == 0)
                 return BadRequest("Failas nepasirinktas");
 
