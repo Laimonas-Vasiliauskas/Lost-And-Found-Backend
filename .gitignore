@@ -2,4 +2,4 @@
 bin/
 obj/
 *.user
-*.suo
+*.suo.vs/
