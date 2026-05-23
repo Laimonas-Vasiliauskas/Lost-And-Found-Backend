@@ -169,7 +169,31 @@ namespace LostAndFoundBack.Controllers
 
             return Ok(ad);
         }
+        [HttpGet("category/{categoryId}")]
+        public IActionResult GetAdsByCategory(int categoryId)
+        {
+            var ads = _context.Ads
+                .Where(a => a.CategoryID == categoryId)
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new
+                {
+                    adID = a.AdID,
+                    userID = a.UserID,
+                    categoryID = a.CategoryID,
+                    title = a.Title,
+                    description = a.Description,
+                    location = a.Location,
+                    type = a.Type,
+                    createdAt = a.CreatedAt,
+                    images = _context.AdImages
+                        .Where(i => i.AdID == a.AdID)
+                        .Select(i => i.ImageID)
+                        .ToList()
+                })
+                .ToList();
 
+            return Ok(ads);
+        }
         [HttpGet]
         public IActionResult GetAllAds()
         {
