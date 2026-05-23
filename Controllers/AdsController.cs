@@ -45,7 +45,7 @@ namespace LostAndFoundBack.Controllers
                     createdAt = a.CreatedAt,
                     images = _context.AdImages
                         .Where(i => i.AdID == a.AdID)
-                        .Select(i => i.ImageUrl)
+                        .Select(i => i.ImageID)
                         .ToList()
                 })
                 .ToList();
@@ -116,25 +116,31 @@ namespace LostAndFoundBack.Controllers
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var filePath = Path.Combine(uploadsFolder, fileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var imageUrl = $"images/{fileName}";
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
 
             var image = new AdImage
             {
                 AdID = adId,
-                ImageUrl = imageUrl
+                ImageData = memoryStream.ToArray(),
+                ContentType = file.ContentType
             };
 
             _context.AdImages.Add(image);
             await _context.SaveChangesAsync();
 
-            return Ok(new { imageUrl });
+            return Ok(new { imageId = image.ImageID });
         }
+        [HttpGet("image/{imageId}")]
+        public IActionResult GetImage(int imageId)
+        {
+            var image = _context.AdImages.FirstOrDefault(i => i.ImageID == imageId);
 
+            if (image == null)
+                return NotFound();
+
+            return File(image.ImageData, image.ContentType);
+        }
         [HttpGet("{id}")]
         public IActionResult GetAdById(int id)
         {
@@ -151,7 +157,7 @@ namespace LostAndFoundBack.Controllers
                     createdAt = a.CreatedAt,
                     images = _context.AdImages
                         .Where(i => i.AdID == a.AdID)
-                        .Select(i => i.ImageUrl)
+                        .Select(i => i.ImageID)
                         .ToList()
                 })
                 .FirstOrDefault();
@@ -180,7 +186,7 @@ namespace LostAndFoundBack.Controllers
                     createdAt = a.CreatedAt,
                     images = _context.AdImages
                         .Where(i => i.AdID == a.AdID)
-                        .Select(i => i.ImageUrl)
+                        .Select(i => i.ImageID)
                         .ToList()
                 })
                 .ToList();

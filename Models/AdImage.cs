@@ -11,6 +11,8 @@ namespace LostAndFoundBack.Models
 
         public int AdID { get; set; }
 
-        public string ImageUrl { get; set; } = null!;
+        public byte[] ImageData { get; set; } = null!;
+
+        public string ContentType { get; set; } = null!;
     }
 }
