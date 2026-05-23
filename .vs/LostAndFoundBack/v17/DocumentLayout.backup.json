@@ -76,7 +76,7 @@
               "RelativeDocumentMoniker": "Controllers\\AdsController.cs",
               "ToolTip": "C:\\Users\\zabel\\source\\repos\\Lost-And-Found-Backend\\Controllers\\AdsController.cs",
               "RelativeToolTip": "Controllers\\AdsController.cs",
-              "ViewState": "AgIAAK4AAAAAAAAAAAAcwMMAAAA4AAAAAAAAAA==",
+              "ViewState": "AgIAAJ4AAAAAAAAAAAAgwKoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-02T10:50:00.284Z",
               "EditorCaption": ""
@@ -115,8 +115,7 @@
               "RelativeToolTip": "Dtos\\RegisterRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-29T11:36:13.814Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-29T11:36:13.814Z"
             },
             {
               "$type": "Document",
@@ -128,8 +127,7 @@
               "RelativeToolTip": "Controllers\\AuthController.cs",
               "ViewState": "AgIAACEAAAAAAAAAAAAowDQAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-29T11:25:18.765Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-29T11:25:18.765Z"
             },
             {
               "$type": "Document",
@@ -153,8 +151,7 @@
               "RelativeToolTip": "Dtos\\LoginRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-29T11:36:45.107Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-29T11:36:45.107Z"
             },
             {
               "$type": "Document",
