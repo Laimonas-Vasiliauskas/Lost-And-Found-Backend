@@ -123,8 +123,12 @@ namespace LostAndFoundApi.Controllers
                 user = new
                 {
                     userID = user.UserID,
+                    firstname = user.FirstName,
+                    lastname = user.LastName,
                     username = user.Username,
                     email = user.Email,
+                    phonenumber = user.PhoneNumber,
+                    city = user.City,
                     createdAt = user.CreatedAt
                 }
             });
