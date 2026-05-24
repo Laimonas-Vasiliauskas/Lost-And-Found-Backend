@@ -1,6 +1,8 @@
-﻿using LostAndFoundApi.Data;
-using LostAndFound.Dtos;
+﻿using LostAndFound.Dtos;
+using LostAndFoundApi.Data;
+using LostAndFoundBack.Dtos;
 using LostAndFoundBack.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -133,5 +135,74 @@ namespace LostAndFoundApi.Controllers
                 }
             });
         }
+
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileRequest request)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "User not found." });
+            }
+
+            var userId = int.Parse(userIdClaim);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserID == userId);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Username) ||
+                string.IsNullOrWhiteSpace(request.Email) ||
+                string.IsNullOrWhiteSpace(request.FirstName) ||
+                string.IsNullOrWhiteSpace(request.LastName) ||
+                string.IsNullOrWhiteSpace(request.PhoneNumber) ||
+                string.IsNullOrWhiteSpace(request.City))
+            {
+                return BadRequest(new { message = "All fields are required." });
+            }
+
+            var usernameExists = await _context.Users
+                .AnyAsync(u => u.Username == request.Username && u.UserID != userId);
+
+            if (usernameExists)
+            {
+                return BadRequest(new { message = "Username already exists." });
+            }
+
+            var emailExists = await _context.Users
+                .AnyAsync(u => u.Email == request.Email && u.UserID != userId);
+
+            if (emailExists)
+            {
+                return BadRequest(new { message = "Email already exists." });
+            }
+
+            user.Username = request.Username;
+            user.Email = request.Email;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.PhoneNumber = request.PhoneNumber;
+            user.City = request.City;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                userID = user.UserID,
+                firstname = user.FirstName,
+                lastname = user.LastName,
+                username = user.Username,
+                email = user.Email,
+                phonenumber = user.PhoneNumber,
+                city = user.City,
+                createdAt = user.CreatedAt
+            });
+        }
+
     }
 }
