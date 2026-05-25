@@ -107,6 +107,7 @@ namespace LostAndFoundBack.Controllers
                 .Select(c => new
                 {
                     conversationID = c.ConversationID,
+
                     adID = c.AdID,
 
                     adTitle = c.Ad != null
@@ -114,9 +115,13 @@ namespace LostAndFoundBack.Controllers
                         : "",
 
                     adImage = _context.AdImages
-                    .Where(i => i.AdID == c.AdID)
-                    .Select(i => i.ImageID)
-                    .FirstOrDefault(),
+                        .Where(i => i.AdID == c.AdID)
+                        .Select(i => i.ImageID)
+                        .FirstOrDefault(),
+
+                    hasUnread = c.Messages.Any(m =>
+                        !m.IsRead &&
+                        m.SenderID != currentUserId),
 
                     lastMessage = c.Messages
                         .OrderByDescending(m => m.SentAt)

@@ -59,6 +59,12 @@ namespace LostAndFoundBack.Controllers
                     m.MessageID,
                     m.ConversationID,
                     m.SenderID,
+
+                    senderUsername = _context.Users
+                        .Where(u => u.UserID == m.SenderID)
+                        .Select(u => u.Username)
+                        .FirstOrDefault(),
+
                     m.Text,
                     m.SentAt
                 })
@@ -106,6 +112,12 @@ namespace LostAndFoundBack.Controllers
                 messageID = message.MessageID,
                 conversationID = message.ConversationID,
                 senderID = message.SenderID,
+
+                senderUsername = _context.Users
+                    .Where(u => u.UserID == currentUserId)
+                    .Select(u => u.Username)
+                    .FirstOrDefault(),
+
                 text = message.Text,
                 sentAt = message.SentAt
             });
