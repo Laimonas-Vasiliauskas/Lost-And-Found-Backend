@@ -88,6 +88,36 @@ namespace LostAndFoundBack.Controllers
         }
 
         [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAd(int id)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim);
+
+            var ad = _context.Ads.FirstOrDefault(a => a.AdID == id && a.UserID == userId);
+
+            if (ad == null)
+            {
+                return NotFound(new { message = "Skelbimas nerastas arba nepriklauso vartotojui" });
+            }
+
+            var images = _context.AdImages.Where(i => i.AdID == id).ToList();
+
+            _context.AdImages.RemoveRange(images);
+            _context.Ads.Remove(ad);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Skelbimas ištrintas sėkmingai" });
+        }
+
+        [Authorize]
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadImage([FromForm] UploadImageDto dto)
@@ -131,6 +161,7 @@ namespace LostAndFoundBack.Controllers
 
             return Ok(new { imageId = image.ImageID });
         }
+
         [HttpGet("image/{imageId}")]
         public IActionResult GetImage(int imageId)
         {
