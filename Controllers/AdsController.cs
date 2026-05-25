@@ -118,6 +118,41 @@ namespace LostAndFoundBack.Controllers
         }
 
         [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAd(int id, [FromBody] CreateAdDto dto)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim);
+
+            var ad = _context.Ads.FirstOrDefault(a => a.AdID == id && a.UserID == userId);
+
+            if (ad == null)
+            {
+                return NotFound(new { message = "Skelbimas nerastas arba nepriklauso vartotojui" });
+            }
+
+            ad.CategoryID = dto.CategoryID;
+            ad.Title = dto.Title;
+            ad.Description = dto.Description;
+            ad.Type = dto.Type;
+            ad.Location = dto.Location;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Skelbimas atnaujintas sėkmingai",
+                adID = ad.AdID
+            });
+        }
+
+        [Authorize]
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadImage([FromForm] UploadImageDto dto)
