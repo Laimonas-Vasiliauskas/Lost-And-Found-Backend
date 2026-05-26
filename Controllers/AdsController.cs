@@ -119,7 +119,8 @@ namespace LostAndFoundBack.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAd(int id, [FromBody] CreateAdDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateAd(int id, [FromForm] UpdateAdDto dto)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -142,6 +143,28 @@ namespace LostAndFoundBack.Controllers
             ad.Description = dto.Description;
             ad.Type = dto.Type;
             ad.Location = dto.Location;
+
+            if (dto.Image != null && dto.Image.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+                await dto.Image.CopyToAsync(memoryStream);
+
+                var oldImages = _context.AdImages.Where(i => i.AdID == id).ToList();
+
+                if (oldImages.Any())
+                {
+                    _context.AdImages.RemoveRange(oldImages);
+                }
+
+                var newImage = new AdImage
+                {
+                    AdID = id,
+                    ImageData = memoryStream.ToArray(),
+                    ContentType = dto.Image.ContentType
+                };
+
+                _context.AdImages.Add(newImage);
+            }
 
             await _context.SaveChangesAsync();
 
